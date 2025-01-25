@@ -2,6 +2,7 @@ import express from 'express'
 import { authRouter } from '../modules/Auth/Auth.roter'
 import { productRouter } from '../modules/Product/product.route'
 import { cartRoutes } from '../modules/Cart/cart.router'
+import { paymentRouter } from '../modules/Order/order.routes'
 
 const router = express.Router()
 
@@ -17,6 +18,10 @@ const moduleRouter=[
     {
         path:"/cart",
         route:cartRoutes
+    },
+    {
+        path:"/payment",
+        route:paymentRouter
     }
 ]
 

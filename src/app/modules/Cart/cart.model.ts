@@ -14,8 +14,10 @@ const orderSchema = new Schema<TCartData>(
         quantity: { type: Number, required: [true, 'Quantity field is required'] },
         totalPrice: {
             type: Number,
-            required: [true, 'TotalPrice field is required'],
         },
+        address:{type:String,required:[true,"address is required"]},
+        number:{type:String},
+        name:{type:String,required:true}
     },
     {
         timestamps: true,
