@@ -19,7 +19,7 @@ const successPayment =catchAsync(async(req:Request,res:Response)=>{
 
     // here redirect to frontend success page
   
-    res.redirect('http://localhost:5173/success')
+    res.redirect('https://final-booken.vercel.app/success')
     
 })
 const failPayment =catchAsync(async(req:Request,res:Response)=>{
@@ -29,7 +29,7 @@ const failPayment =catchAsync(async(req:Request,res:Response)=>{
 
     // here redirect to frontend fail page
   
-    res.redirect('http://localhost:5173/fail')
+    res.redirect('https://final-booken.vercel.app/fail')
 })
 
 
