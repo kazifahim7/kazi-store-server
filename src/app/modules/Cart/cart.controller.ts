@@ -25,7 +25,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
     const result = await cartServices.createOrderInDB(value);
 
     res.status(200).json({
-        message: 'Revenue calculated successfully',
+        message: 'Product added to cart successfully',
         success: true,
         data: result,
     });

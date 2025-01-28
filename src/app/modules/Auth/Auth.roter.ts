@@ -13,11 +13,11 @@ router.post("/login", validateRequest(loginUserValidation),authController.logInU
 
 router.patch("/update-status/:id",auth("admin"),authController.updateStatus)
 
-router.put("/update-profile/:id", authController.updateProfile)
+router.put("/update-profile/:email", authController.updateProfile)
 
 router.get("/all-users", auth("admin") ,authController.allUsers)
 
-router.get("/user/:id",authController.singleUser)
+router.get("/user/:email",authController.singleUser)
 
 
 

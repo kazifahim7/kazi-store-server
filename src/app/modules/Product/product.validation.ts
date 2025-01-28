@@ -22,7 +22,7 @@ export const productSchema = z.object({
         }),
         inStock: z.boolean({
             required_error: 'Product stock status is required',
-        }),
+        }).default(true),
         img: z.string().optional().default(''),
     }),
 });

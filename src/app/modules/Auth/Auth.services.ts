@@ -68,13 +68,14 @@ const updateStatusInDB =async(id:string,payload:Record<string,unknown>)=>{
     return result
 
 }
-const updateProfileInDB =async(id:string,payload:Record<string,unknown>)=>{
-    const isUserExist = await userModel.findById(id)
+const updateProfileInDB =async(email:string,payload:Record<string,unknown>)=>{
+    const isUserExist = await userModel.findOne({email:email})
+    console.log(isUserExist)
     if (!isUserExist) {
         throw new AppError(404, "This user Not Found");
 
     }
-    const result= await userModel.findByIdAndUpdate(id,payload,{new:true})
+    const result= await userModel.findOneAndUpdate({email:email},payload,{new:true})
     return result
 
 }
@@ -86,7 +87,7 @@ const allStudentFromDB =async()=>{
 }
 const getSingleUser =async(id:string)=>{
    
-    const result= await userModel.findById(id).select("-password")
+    const result= await userModel.findOne({email:id}).select("-password")
     return result
 
 }

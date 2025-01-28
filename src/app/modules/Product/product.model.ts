@@ -40,7 +40,7 @@ const productSchema = new Schema<Product>(
         },
         inStock: {
             type: Boolean,
-            required: [true, 'Product stock status is required'],
+            required: [true, 'Product stock status is required'],default:true,
         },
         img:{type:String,default:""}
     },

@@ -44,7 +44,7 @@ const updateStatus=catchAsync(async(req:Request,res:Response)=>{
 
 })
 const updateProfile=catchAsync(async(req:Request,res:Response)=>{
-    const id=req.params.id;
+    const id=req.params?.email;
     const data=req.body
     const result= await authService.updateProfileInDB(id,data)
 
@@ -70,7 +70,7 @@ const allUsers=catchAsync(async(req:Request,res:Response)=>{
 })
 const singleUser=catchAsync(async(req:Request,res:Response)=>{
     
-    const result= await authService.getSingleUser(req?.params?.id)
+    const result= await authService.getSingleUser(req?.params?.email)
 
     res.status(200).json({
         success:true,

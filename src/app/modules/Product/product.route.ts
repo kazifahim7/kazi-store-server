@@ -10,10 +10,10 @@ const router = express.Router();
 router.post('/create-products',auth("admin"),validateRequest(productSchema), productController.createProduct);
 
 //2. Get All Stationery Products
-router.get('/all-products',auth("admin","user"), productController.getAllProduct);
+router.get('/all-products', productController.getAllProduct);
 
 //3. Get a Specific Stationery Product
-router.get('/single-product/:productId', auth("admin", "user"), productController.getProductByID);
+router.get('/single-product/:productId', productController.getProductByID);
 
 //4. Update a Stationery Product
 router.put('/products-update/:productId', auth("admin"), productController.updateProductByID);

@@ -4,17 +4,18 @@ import SSLCommerzPayment from 'sslcommerz-lts'
 import config from "../../config";
 import PaymentModel from "./order.model";
 import AppError from "../../Errors/AppError";
+import { cartModel } from "../Cart/cart.model";
 
 const store_id = config.store_id
 const store_passwd = config.store_pass
-const is_live = false 
+const is_live = false
 
-const createPaymentInDB=async(payload:PayMentData)=>{
-   
-    payload.paymentId= new Types.ObjectId().toString()
-    payload.orderStatus="Pending",
-    payload.paymentStatus=false
-   
+const createPaymentInDB = async (payload: PayMentData) => {
+
+    payload.paymentId = new Types.ObjectId().toString()
+    payload.orderStatus = "Pending",
+        payload.paymentStatus = false
+
 
     let GatewayPageURL;
 
@@ -52,16 +53,16 @@ const createPaymentInDB=async(payload:PayMentData)=>{
     const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
     try {
-        const apiResponse = await sslcz.init(data);  
+        const apiResponse = await sslcz.init(data);
         GatewayPageURL = apiResponse.GatewayPageURL;
         console.log(GatewayPageURL);
 
-        if(GatewayPageURL){
+        if (GatewayPageURL) {
             await PaymentModel.create(payload)
         }
 
         // You can return the GatewayPageURL or use it as needed
-        return {url:GatewayPageURL};
+        return { url: GatewayPageURL };
     } catch (error) {
         console.error('Payment initialization failed:', error);
         // Handle error appropriately, e.g., return a fallback value or throw an error
@@ -71,24 +72,28 @@ const createPaymentInDB=async(payload:PayMentData)=>{
 }
 
 
-const successPayment=async(id:string)=>{
+const successPayment = async (id: string) => {
 
-    const isExists = await PaymentModel.findOne({ paymentId :id})
-    if(!isExists){
-        throw new AppError(404,"this Payment data not found");
-        
+    const isExists = await PaymentModel.findOne({ paymentId: id })
+    if (!isExists) {
+        throw new AppError(404, "this Payment data not found");
+
     }
-    const result = await PaymentModel.findOneAndUpdate({ paymentId: id }, { paymentStatus : true},{new:true})
+    const result = await PaymentModel.findOneAndUpdate({ paymentId: id }, { paymentStatus: true }, { new: true })
+
+    if (result) {
+        await cartModel.deleteMany({ email: isExists.customerMail })
+    }
 
     return result
 
 }
-const failPayment =async(id:string)=>{
+const failPayment = async (id: string) => {
 
-    const isExists = await PaymentModel.findOne({ paymentId :id})
-    if(!isExists){
-        throw new AppError(404,"this Payment data not found");
-        
+    const isExists = await PaymentModel.findOne({ paymentId: id })
+    if (!isExists) {
+        throw new AppError(404, "this Payment data not found");
+
     }
     const result = await PaymentModel.findOneAndDelete({ paymentId: id })
 
@@ -97,9 +102,37 @@ const failPayment =async(id:string)=>{
 }
 
 
+const allPaymentFromDB = async () => {
+    const result = await PaymentModel.find().populate("orderProducts.productId")
+    return result
+}
 
-export const paymentService={
+
+const myPaymentFromDB = async (email: string) => {
+    const isExists = await PaymentModel.findOne({ customerMail:email })
+    if (!isExists) {
+        throw new AppError(404, "this Payment data not found");
+
+    }
+
+
+    const result = await PaymentModel.find({ customerMail: email }).populate("orderProducts.productId")
+    return result
+}
+
+
+const updatePaymentStatusFromDB = async (id: string, payload: Record<string, unknown>) => {
+    const result = await PaymentModel.findByIdAndUpdate(id, payload,{new:true})
+    return result
+}
+
+
+
+export const paymentService = {
     createPaymentInDB,
     successPayment,
-    failPayment
+    failPayment,
+    allPaymentFromDB,
+    myPaymentFromDB,
+    updatePaymentStatusFromDB
 }

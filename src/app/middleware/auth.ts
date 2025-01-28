@@ -50,7 +50,7 @@ const auth=(...roles:string[])=>{
             );
         }
 
-        req.user = decoded
+        req.user = decoded as JwtPayload & { role: string };
 
 
         next()
